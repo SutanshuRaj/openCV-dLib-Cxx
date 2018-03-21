@@ -12,3 +12,10 @@ cmake .
 make 
 ./<executable>
 ```
+
+or
+
+```
+g++ -std=c++11 <file>.cpp `pkg-config --libs --cflags opencv` -o <executable>
+./<executable>
+```
