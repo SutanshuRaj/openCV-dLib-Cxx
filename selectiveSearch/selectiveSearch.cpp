@@ -10,7 +10,17 @@ using namespace cv;
 using namespace std;
 using namespace cv::ximgproc::segmentation;
 
+static void help() {
+  cout << endl << "Usage: " << endl <<
+    "/.selectiveSearch inputImage (f | g) " << endl <<
+    "f=fast and q=quality" << endl <<
+    "Use 'l' to decrease bounding boxes, 'm' to increase, and 'q' to quit." << endl; }
+
 int main (int argc, char * argv[]) {
+
+  if (argc < 3) {
+    help();
+    return -1; }
 
   setUseOptimized(true);
   setNumThreads(4);
@@ -38,5 +48,24 @@ int main (int argc, char * argv[]) {
 
   int numBbox = 100;
   int increment = 50;
-  
-  
+
+  while (1) {
+    Mat outputImg = img.clone();
+    for (int i = 0; i < bbox.size(); ++i) {
+      if (i < numBbox)
+	rectangle(outputImg, bbox[i], Scalar(0, 255, 0));
+      else
+	break; }
+
+    imshow("Output Image", outputImg);
+
+    int k = waitKey();
+    if (k == 109)
+      numBbox += increment;
+    else if (k == 108 && numBbox > increment)
+      numBbox -= increment;
+    else if (k == 113)
+      break; }
+
+  return 0; }
+
